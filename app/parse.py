@@ -36,7 +36,8 @@ def parse_author(author_soup: BeautifulSoup) -> Author:
     name = author_soup.select_one(".author-title").text.strip()
     birth_date = author_soup.select_one(".author-born-date").text.strip()
     birth_place = author_soup.select_one(".author-born-location").text.strip()
-    bio = author_soup.select_one(".author-description").text.strip().replace("\n", " ")
+    bio = author_soup.select_one(".author-description")
+    bio = bio.text.strip().replace("\n", " ")
 
     return Author(
         name=name,
@@ -86,7 +87,7 @@ def scrape_quotes(
     return all_quotes, list(all_authors.values())
 
 
-def save_quotes_to_csv(quotes: list[Quote], output_csv_path) -> None:
+def save_quotes_to_csv(quotes: list[Quote], output_csv_path: str) -> None:
     with open(output_csv_path, "w", newline="") as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow(["text", "author", "tags"])
@@ -94,7 +95,7 @@ def save_quotes_to_csv(quotes: list[Quote], output_csv_path) -> None:
             writer.writerow([quote.text, quote.author, quote.tags])
 
 
-def save_authors_to_csv(authors: list[Author], output_csv_path) -> None:
+def save_authors_to_csv(authors: list[Author], output_csv_path: str) -> None:
     with open(output_csv_path, "w", newline="") as csv_file:
         writer = csv.writer(csv_file)
         writer.writerow(["name", "birth_date", "birth_place", "bio"])
